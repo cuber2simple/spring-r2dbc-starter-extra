@@ -96,7 +96,7 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
         return Mono.create(sink ->
                         sink.success(ScriptEngineManagerExtra.cleanQuery(compiledScript, accessor))
                 ).cast(String.class).map(cleanSql -> STRING_BASED_R_2_DBC_QUERY_CACHE.computeIfAbsent(cleanSql, (sql) -> create(sql)))
-                .block().createQuery(accessor);
+                .flatMap(stringBasedR2dbcQuery -> stringBasedR2dbcQuery.createQuery(accessor));
 
     }
 
