@@ -1,11 +1,14 @@
 package org.cuber2simple.r2dbc.repository.support;
 
+import org.cuber2simple.r2dbc.annotation.DynamicQuery;
+import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.data.mapping.context.MappingContext;
 import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
+import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.query.PartTreeR2dbcQuery;
 import org.springframework.data.r2dbc.repository.query.R2dbcQueryMethod;
 import org.springframework.data.r2dbc.repository.query.StringBasedR2dbcQuery;
@@ -24,6 +27,7 @@ import org.springframework.expression.spel.standard.SpelExpressionParser;
 import org.springframework.r2dbc.core.DatabaseClient;
 
 import java.lang.reflect.Method;
+import java.util.Objects;
 import java.util.Optional;
 
 public class R2dbcRepositoryFactoryExtra extends R2dbcRepositoryFactory {
@@ -90,18 +94,24 @@ public class R2dbcRepositoryFactoryExtra extends R2dbcRepositoryFactory {
             R2dbcQueryMethod queryMethod = new R2dbcQueryMethod(method, metadata, factory,
                     this.converter.getMappingContext());
             String namedQueryName = queryMethod.getNamedQueryName();
-
-            if (namedQueries.hasQuery(namedQueryName)) {
-                String namedQuery = namedQueries.getQuery(namedQueryName);
-                return new StringBasedR2dbcQuery(namedQuery, queryMethod, this.entityOperations, this.converter,
+            DynamicQuery dynamicQuery = AnnotatedElementUtils.findMergedAnnotation(method, DynamicQuery.class);
+            if (Objects.nonNull(dynamicQuery)) {
+                return new StringDynamicR2dbcQuery( dynamicQuery, queryMethod, this.entityOperations, this.converter,
                         this.dataAccessStrategy,
                         parser, this.evaluationContextProvider);
-            } else if (queryMethod.hasAnnotatedQuery()) {
-                return new StringDynamicR2dbcQuery(queryMethod, this.entityOperations, this.converter, this.dataAccessStrategy,
-                        this.parser,
-                        this.evaluationContextProvider);
             } else {
-                return new PartTreeR2dbcQuery(queryMethod, this.entityOperations, this.converter, this.dataAccessStrategy);
+                if (namedQueries.hasQuery(namedQueryName)) {
+                    String namedQuery = namedQueries.getQuery(namedQueryName);
+                    return new StringBasedR2dbcQuery(namedQuery, queryMethod, this.entityOperations, this.converter,
+                            this.dataAccessStrategy,
+                            parser, this.evaluationContextProvider);
+                } else if (queryMethod.hasAnnotatedQuery()) {
+                    return new StringBasedR2dbcQuery(queryMethod, this.entityOperations, this.converter, this.dataAccessStrategy,
+                            this.parser,
+                            this.evaluationContextProvider);
+                } else {
+                    return new PartTreeR2dbcQuery(queryMethod, this.entityOperations, this.converter, this.dataAccessStrategy);
+                }
             }
         }
     }
