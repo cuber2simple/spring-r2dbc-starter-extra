@@ -60,6 +60,7 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
         this.dataAccessStrategy = dataAccessStrategy;
         this.scriptEngineTemplate = SpringUtils.getBean(ScriptEngineTemplate.class);
         this.dynamicSql = dynamicQuery.value();
+        scriptEngineTemplate.precompiled(dynamicSql);
     }
 
     /*

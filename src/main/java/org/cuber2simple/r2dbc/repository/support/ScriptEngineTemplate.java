@@ -88,7 +88,7 @@ public class ScriptEngineTemplate {
      * @param script
      */
     public void precompiled(String script) {
-        if (Objects.nonNull(scriptEngine)) {
+        if (Objects.nonNull(scriptEngine) && !StringUtils.hasText(this.scriptEngineTemplateProperties.getRenderMethod())) {
             try {
                 COMPILED_SCRIPT_CACHE.computeIfAbsent(script, (sc) -> {
                     try {
