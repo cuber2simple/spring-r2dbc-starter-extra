@@ -14,10 +14,4 @@ public @interface DynamicQuery {
      * The Dynamic SQL statement to execute when the annotated method gets invoked.
      */
     String value();
-
-    /**
-     *
-     * The Dynamic SQL statement using which language script
-     */
-    String lang() default "groovy";
 }

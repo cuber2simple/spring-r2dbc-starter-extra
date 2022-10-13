@@ -1,7 +1,8 @@
 package org.springframework.data.r2dbc.repository.query;
 
 import org.cuber2simple.r2dbc.annotation.DynamicQuery;
-import org.cuber2simple.r2dbc.repository.support.ScriptEngineManagerExtra;
+import org.cuber2simple.r2dbc.components.SpringUtils;
+import org.cuber2simple.r2dbc.repository.support.ScriptEngineTemplate;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
@@ -15,7 +16,6 @@ import org.springframework.r2dbc.core.DatabaseClient;
 import org.springframework.r2dbc.core.PreparedOperation;
 import reactor.core.publisher.Mono;
 
-import javax.script.CompiledScript;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
@@ -30,7 +30,9 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
 
     private R2dbcConverter converter;
 
-    private CompiledScript compiledScript;
+    private ScriptEngineTemplate scriptEngineTemplate;
+
+    private String dynamicSql;
 
 
     private static final ConcurrentHashMap<String, StringBasedR2dbcQuery> STRING_BASED_R_2_DBC_QUERY_CACHE = new ConcurrentHashMap<>();
@@ -49,7 +51,6 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
     public StringDynamicR2dbcQuery(DynamicQuery dynamicQuery, R2dbcQueryMethod method, R2dbcEntityOperations entityOperations,
                                    R2dbcConverter converter, ReactiveDataAccessStrategy dataAccessStrategy, ExpressionParser expressionParser,
                                    ReactiveQueryMethodEvaluationContextProvider evaluationContextProvider) {
-
         super(method, entityOperations, converter);
         this.entityOperations = entityOperations;
         this.converter = converter;
@@ -57,7 +58,8 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
         this.evaluationContextProvider = evaluationContextProvider;
         this.dynamicQuery = dynamicQuery;
         this.dataAccessStrategy = dataAccessStrategy;
-        this.compiledScript = ScriptEngineManagerExtra.fetch(dynamicQuery);
+        this.scriptEngineTemplate = SpringUtils.getBean(ScriptEngineTemplate.class);
+        this.dynamicSql = dynamicQuery.value();
     }
 
     /*
@@ -93,11 +95,9 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
      */
     @Override
     protected Mono<PreparedOperation<?>> createQuery(RelationalParameterAccessor accessor) {
-        return Mono.create(sink ->
-                        sink.success(ScriptEngineManagerExtra.cleanQuery(compiledScript, accessor))
-                ).cast(String.class).map(cleanSql -> STRING_BASED_R_2_DBC_QUERY_CACHE.computeIfAbsent(cleanSql, (sql) -> create(sql)))
+        return scriptEngineTemplate.eval(dynamicSql, accessor)
+                .map(sql -> STRING_BASED_R_2_DBC_QUERY_CACHE.computeIfAbsent(sql, (the) -> create(the)))
                 .flatMap(stringBasedR2dbcQuery -> stringBasedR2dbcQuery.createQuery(accessor));
-
     }
 
 

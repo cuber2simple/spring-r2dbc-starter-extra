@@ -8,7 +8,6 @@ import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
-import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.r2dbc.repository.query.PartTreeR2dbcQuery;
 import org.springframework.data.r2dbc.repository.query.R2dbcQueryMethod;
 import org.springframework.data.r2dbc.repository.query.StringBasedR2dbcQuery;
@@ -96,7 +95,7 @@ public class R2dbcRepositoryFactoryExtra extends R2dbcRepositoryFactory {
             String namedQueryName = queryMethod.getNamedQueryName();
             DynamicQuery dynamicQuery = AnnotatedElementUtils.findMergedAnnotation(method, DynamicQuery.class);
             if (Objects.nonNull(dynamicQuery)) {
-                return new StringDynamicR2dbcQuery( dynamicQuery, queryMethod, this.entityOperations, this.converter,
+                return new StringDynamicR2dbcQuery(dynamicQuery, queryMethod, this.entityOperations, this.converter,
                         this.dataAccessStrategy,
                         parser, this.evaluationContextProvider);
             } else {
