@@ -4,9 +4,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
+@Component
 public class SpringUtils implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
