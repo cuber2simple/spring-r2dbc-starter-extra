@@ -1,4 +1,0 @@
-#org.springframework.context.ApplicationContextInitializer=\
-#  com.photon.acquire.initializer.ConfigInitializer
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-  org.cuber2simple.r2dbc.conf.R2dbcExtraConf
