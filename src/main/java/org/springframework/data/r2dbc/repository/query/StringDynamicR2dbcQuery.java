@@ -1,8 +1,8 @@
 package org.springframework.data.r2dbc.repository.query;
 
 import org.cuber2simple.r2dbc.annotation.DynamicQuery;
-import org.cuber2simple.r2dbc.components.SpringUtils;
 import org.cuber2simple.r2dbc.repository.support.ScriptEngineTemplate;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
 import org.springframework.data.r2dbc.core.ReactiveDataAccessStrategy;
@@ -34,6 +34,8 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
 
     private String dynamicSql;
 
+    private ApplicationContext applicationContext;
+
 
     private static final ConcurrentHashMap<String, StringBasedR2dbcQuery> STRING_BASED_R_2_DBC_QUERY_CACHE = new ConcurrentHashMap<>();
 
@@ -50,7 +52,7 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
      */
     public StringDynamicR2dbcQuery(DynamicQuery dynamicQuery, R2dbcQueryMethod method, R2dbcEntityOperations entityOperations,
                                    R2dbcConverter converter, ReactiveDataAccessStrategy dataAccessStrategy, ExpressionParser expressionParser,
-                                   ReactiveQueryMethodEvaluationContextProvider evaluationContextProvider) {
+                                   ReactiveQueryMethodEvaluationContextProvider evaluationContextProvider, ApplicationContext applicationContext) {
         super(method, entityOperations, converter);
         this.entityOperations = entityOperations;
         this.converter = converter;
@@ -58,7 +60,8 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
         this.evaluationContextProvider = evaluationContextProvider;
         this.dynamicQuery = dynamicQuery;
         this.dataAccessStrategy = dataAccessStrategy;
-        this.scriptEngineTemplate = SpringUtils.getBean(ScriptEngineTemplate.class);
+        this.applicationContext = applicationContext;
+        this.scriptEngineTemplate = applicationContext.getBean(ScriptEngineTemplate.class);
         this.dynamicSql = dynamicQuery.value();
         scriptEngineTemplate.precompiled(dynamicSql);
     }
