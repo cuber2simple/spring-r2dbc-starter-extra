@@ -37,10 +37,10 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
     private ApplicationContext applicationContext;
 
 
-    private static final ConcurrentHashMap<String, StringBasedR2dbcQuery> STRING_BASED_R_2_DBC_QUERY_CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, StringBasedR2dbcQueryExtra> STRING_BASED_R_2_DBC_QUERY_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * Create a new {@link StringBasedR2dbcQuery} for the given {@code query}, {@link R2dbcQueryMethod},
+     * Create a new {@link StringBasedR2dbcQueryExtra} for the given {@code query}, {@link R2dbcQueryMethod},
      * {@link DatabaseClient}, {@link SpelExpressionParser}, and {@link QueryMethodEvaluationContextProvider}.
      *
      * @param method                    must not be {@literal null}.
@@ -105,8 +105,8 @@ public class StringDynamicR2dbcQuery extends AbstractR2dbcQuery {
     }
 
 
-    private StringBasedR2dbcQuery create(String cleanSql) {
-        return new StringBasedR2dbcQuery(cleanSql, this.getQueryMethod(), this.entityOperations, this.converter,
+    private StringBasedR2dbcQueryExtra create(String cleanSql) {
+        return new StringBasedR2dbcQueryExtra(cleanSql, this.getQueryMethod(), this.entityOperations, this.converter,
                 this.dataAccessStrategy,
                 this.expressionParser, this.evaluationContextProvider);
     }
