@@ -35,8 +35,6 @@ public class ScriptEngineTemplate {
 
     private Object renderObject;
 
-
-
     private static final ConcurrentHashMap<String, CompiledScript> COMPILED_SCRIPT_CACHE = new ConcurrentHashMap<>();
 
     public ScriptEngineTemplate(ScriptEngineTemplateProperties scriptEngineTemplateProperties, ApplicationContext applicationContext) {

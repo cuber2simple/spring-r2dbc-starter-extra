@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 public class R2dbcExtraConf {
 
     public static final String GROOVY_RENDER_OBJECT =
-            "class Evaluator{\n" +
+                    "class Evaluator{\n" +
                     "  def engine = new groovy.text.SimpleTemplateEngine()\n" +
                     "  def cache = new HashMap();\n" +
                     "  def nvl(obj, string){\n" +
