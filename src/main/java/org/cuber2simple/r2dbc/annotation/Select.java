@@ -14,9 +14,8 @@ public @interface Select {
     String value();
 
     /**
-     * Returns a result map to use for mapping SQL records
-     *
-     * @return a result map ID
+     * select id, default = "package.ClassName.MethodName"
+     * @return
      */
-    String resultMap() default "";
+    String id();
 }

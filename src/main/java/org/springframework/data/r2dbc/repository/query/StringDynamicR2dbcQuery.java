@@ -1,7 +1,7 @@
 package org.springframework.data.r2dbc.repository.query;
 
 import org.cuber2simple.r2dbc.annotation.DynamicQuery;
-import org.cuber2simple.r2dbc.repository.support.ScriptEngineTemplate;
+import org.cuber2simple.r2dbc.script.support.ScriptEngineTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.r2dbc.convert.R2dbcConverter;
 import org.springframework.data.r2dbc.core.R2dbcEntityOperations;

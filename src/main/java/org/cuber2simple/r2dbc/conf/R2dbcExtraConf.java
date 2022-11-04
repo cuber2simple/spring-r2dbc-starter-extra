@@ -2,8 +2,8 @@ package org.cuber2simple.r2dbc.conf;
 
 
 import groovy.util.GroovyScriptEngine;
-import org.cuber2simple.r2dbc.config.ScriptEngineTemplateProperties;
-import org.cuber2simple.r2dbc.repository.support.ScriptEngineTemplate;
+import org.cuber2simple.r2dbc.script.support.ScriptEngineTemplateProperties;
+import org.cuber2simple.r2dbc.script.support.ScriptEngineTemplate;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.ApplicationContext;

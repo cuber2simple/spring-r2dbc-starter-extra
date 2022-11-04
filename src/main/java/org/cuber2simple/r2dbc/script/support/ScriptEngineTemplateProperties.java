@@ -1,4 +1,4 @@
-package org.cuber2simple.r2dbc.config;
+package org.cuber2simple.r2dbc.script.support;
 
 import lombok.Data;
 

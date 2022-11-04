@@ -1,8 +1,8 @@
-package org.cuber2simple.r2dbc.repository.support;
+package org.cuber2simple.r2dbc.script.support;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
-import org.cuber2simple.r2dbc.config.ScriptEngineTemplateProperties;
+import org.cuber2simple.r2dbc.script.support.ScriptEngineTemplateProperties;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.Resource;
 import org.springframework.data.relational.repository.query.RelationalParameterAccessor;
